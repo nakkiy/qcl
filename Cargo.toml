@@ -1,0 +1,15 @@
+[package]
+name = "qcl"
+version = "1.0.0"
+edition = "2021"
+description = "QCL Quick Command Launcher - CLI tool for running predefined command snippets with interactive placeholders."
+authors = ["nakkiy"]
+license = "MIT"
+repository = "https://github.com/yourusername/qcl"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+dialoguer = "0.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+dirs = "5.0"
