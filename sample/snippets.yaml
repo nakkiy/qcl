@@ -1,0 +1,45 @@
+snippets:
+  - name: example
+    command: "echo Hello, [[name=world]]!"
+
+  - name: docker-exec
+    command: docker exec -it [[container_id from:"docker ps --format '{{.ID}} {{.Names}}'" select:1]] /bin/bash
+
+  - name: ssh-login
+    command: ssh [[host from:function]]
+    function:
+      multi: false
+      from: >
+        awk '$1 == "Host" {
+                if (host != "" && hostname != "" && user != "")
+                    print host, hostname, user
+                host=$2; hostname=""; user=""
+              }
+              $1 == "Hostname" {hostname=$2}
+              $1 == "User" {user=$2}
+              END {
+                if (host != "" && hostname != "" && user != "")
+                    print host, hostname, user
+              }' ~/.ssh/config
+      select:
+        host: 0
+
+  - name: ssh-login-function
+    command: ssh [[user from:function]]@[[host from:function]]
+    function:
+      multi: true
+      from: >
+        awk '$1 == "Host" {
+                if (host != "" && hostname != "" && user != "")
+                    print host, hostname, user
+                host=$2; hostname=""; user=""
+              }
+              $1 == "Hostname" {hostname=$2}
+              $1 == "User" {user=$2}
+              END {
+                if (host != "" && hostname != "" && user != "")
+                    print host, hostname, user
+              }' ~/.ssh/config
+      select:
+        user: 2
+        host: 1
