@@ -134,7 +134,7 @@ fn parse_placeholder(
     Option<String>,
     Option<usize>,
 ) {
-    let mut name = String::new();
+    let name;
     let mut from_command: Option<String> = None;
     let mut select_index: Option<usize> = None;
     let mut default_value: Option<String> = None;
