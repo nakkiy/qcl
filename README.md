@@ -16,6 +16,11 @@
 
 ---
 
+## ssh config から接続先を選ぶサンプル
+![demo](docs/demo.gif)
+
+---
+
 ## 🛠️ インストール
 ```bash
 git clone --depth 1 https://github.com/nakkiy/qcl ~/.qcl

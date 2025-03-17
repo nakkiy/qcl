@@ -3,7 +3,6 @@ use std::collections::HashMap;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Function {
-    pub multi: bool,
     pub from: String,
     pub select: HashMap<String, usize>,
 }

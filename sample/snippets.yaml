@@ -5,10 +5,10 @@ snippets:
   - name: docker-exec
     command: docker exec -it [[container_id from:"docker ps --format '{{.ID}} {{.Names}}'" select:1]] /bin/bash
 
-  - name: ssh-login
+  - name: ssh-login-host
     command: ssh [[host from:function]]
     function:
-      multi: false
+      multi: true
       from: >
         awk '$1 == "Host" {
                 if (host != "" && hostname != "" && user != "")
@@ -24,7 +24,7 @@ snippets:
       select:
         host: 0
 
-  - name: ssh-login-function
+  - name: ssh-login-user@hostname
     command: ssh [[user from:function]]@[[host from:function]]
     function:
       multi: true

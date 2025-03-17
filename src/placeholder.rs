@@ -7,9 +7,7 @@ pub fn resolve_placeholders(snippet: Snippet) -> Result<String, Box<dyn std::err
     let mut vars: HashMap<String, String> = HashMap::new();
 
     if let Some(func) = &snippet.function {
-        if func.multi {
-            process_function_multi(func, &mut vars)?;
-        }
+        process_function(func, &mut vars)?;
     }
 
     let mut resolved_command = snippet.command.clone();
@@ -88,7 +86,7 @@ pub fn resolve_placeholders(snippet: Snippet) -> Result<String, Box<dyn std::err
     Ok(resolved_command)
 }
 
-fn process_function_multi(
+fn process_function(
     function: &Function,
     vars: &mut HashMap<String, String>,
 ) -> Result<(), Box<dyn std::error::Error>> {
