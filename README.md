@@ -1,154 +1,156 @@
 # qcl - Quick Command Launcher
 
-## 🚀 概要
-**`qcl` (Quick Command Launcher)** は、ターミナルで使うコマンドスニペットの選択＆実行をサポートする CLI ツールです。  
-スニペットは YAML ファイルで管理し、インタラクティブな選択・入力で動的に値を埋め込みます。  
-**覚えない・間違えない CLI 操作** を目指します。
+[🇯🇵 日本語版README](docs/ja/README.md)  
+
+## 🚀 Overview
+**`qcl` (Quick Command Launcher)** is a CLI tool that helps you select and execute command snippets efficiently in your terminal.  
+Snippets are managed in YAML files, and you can dynamically embed values through interactive prompts and selections.  
+Our goal is to enable **error-free and effortless CLI operations** without the need to memorize commands.
 
 ---
 
-## ✅ 主な機能
-- 🔖 YAML でコマンドスニペットを定義
-- ✏️ プレースホルダーへのインタラクティブ入力と選択
-- 🏗️ `function` で複数の値を一括選択・フィールド自動分割
-- 📂 `-f` オプションで追加スニペットファイルを読み込み可能（優先順位あり）
-- 🛠️ デフォルトファイル（`~/.config/qcl/snippets.yaml`）の自動生成
+## ✅ Key Features
+- 🔖 Define command snippets in YAML
+- ✏️ Interactive input and selection for placeholders
+- 🏗️ Use `function` to batch select and split multiple values automatically
+- 📂 Load additional snippet files with the `-f` option (with priority handling)
+- 🛠️ Automatically generate a default snippet file at `~/.config/qcl/snippets.yaml`
 
 ---
 
-## ssh config から接続先を選ぶサンプル
+## 🎬 Sample: Connect via SSH config
 ![demo](docs/demo.gif)
 
 ---
 
-## 🛠️ インストール
+## 🛠️ Installation
 ```bash
 git clone --depth 1 https://github.com/nakkiy/qcl ~/.qcl
 cd ~/.qcl
 cargo install --path .
 ```
 
-インストール後、`$HOME/.cargo/bin` が `PATH` に含まれていることを確認：
+After installation, make sure `$HOME/.cargo/bin` is included in your `PATH`:
 ```bash
 export PATH="$HOME/.cargo/bin:$PATH"
 ```
 
-[snippets.yaml](sample/snippets.yaml)をコピー
+Copy the sample `snippets.yaml`:
 ```bash
 mkdir ~/.config/qcl/
 cp ~/.qcl/sample/snippets.yaml ~/.config/qcl/
 ```
 
-bashの場合、下記を実行することで `ctrl + /` で実行することができます。
+If you're using bash, you can bind `ctrl + /` to launch `qcl` by running:
 ```bash
 echo "[ -f ~/.qcl/shell/keybinding.bash ] && source ~/.qcl/shell/keybinding.bash" >> ~/.bashrc
 ```
 
 ---
 
-## 🖥️ 使い方
-### スニペット一覧から選択
+## 🖥️ How to Use
+### Select from a list of snippets
 ```bash
 qcl
 ```
 
-1. スニペットを選ぶ
-1. プレースホルダーに値を入力・選択
-1. 最終的なコマンドを表示
+1. Choose a snippet
+2. Enter/select values for the placeholders
+3. View the final command
 
 ---
 
-## ⚙️ オプション
-| オプション      | 説明                                               |
-|-----------------|----------------------------------------------------|
-| `-f, --file`    | 追加の YAML ファイルを読み込む。重複キーはこのファイルが優先 |
+## ⚙️ Options
+| Option          | Description                                                        |
+|-----------------|--------------------------------------------------------------------|
+| `-f, --file`    | Load an additional YAML file. Snippets with duplicate keys are overridden by this file. |
 
-例：
+Example:
 ```bash
 qcl -f ./my_snippets.yaml
 ```
 
 ---
 
-## 🗂️ YAMLスニペットの構成
-### デフォルトスニペットファイル
-初回実行時、以下のファイルが自動生成されます：
+## 🗂️ YAML Snippet Structure
+### Default snippet file
+On the first run, the following file is automatically generated:
 ```
 ~/.config/qcl/snippets.yaml
 ```
 
 ---
 
-## 🔡 プレースホルダー構文
+## 🔡 Placeholder Syntax
 ```
 [[name=default]]
-[[name from:"コマンド" select:1 order:2]]
+[[name from:"command" select:1 order:2]]
 [[name from:function]]
 ```
 
-| パラメータ   | 説明                                                        |
-|--------------|-------------------------------------------------------------|
-| `name`       | プレースホルダー名                                          |
-| `=default`   | デフォルト値                                                |
-| `from`       | コマンド出力を選択肢にする                                  |
-| `select`     | 選択肢のフィールドインデックス（0始まり）                   |
-| `order`      | 入力・選択順を指定（数字が小さい順に実行）                  |
-| `function`   | 下記参照                                                    |
+| Parameter   | Description                                                    |
+|-------------|----------------------------------------------------------------|
+| `name`      | Placeholder name                                               |
+| `=default`  | Default value                                                  |
+| `from`      | Use command output as selectable choices                      |
+| `select`    | Field index of the choice (starting from 0)                   |
+| `order`     | Specify the input/selection order (executed by ascending order)|
+| `function`  | See below                                                     |
 
 ---
 
-## 🏗️ `function` とは？
-`function` を使うと、**1回の選択操作で複数のフィールドを一括入力**できます。  
-複数項目をまとめて取得・分解したい場合に便利！
+## 🏗️ What is `function`?
+With `function`, you can **input multiple fields at once by a single selection**.  
+It's handy when you want to retrieve and split multiple values together!
 
-### 使いどころ
-- `.ssh/config` の `Hostname / User` を一度に取得して `ssh` 接続を組み立てる
-- 一覧から選んで複数フィールドを埋め込むとき
+### Example use cases
+- Build an `ssh` connection command by fetching `Hostname` and `User` from `.ssh/config`
+- Populate multiple fields from a single item in a list
 
-### YAML例
+### YAML Example
 ```yaml
 - name: ssh-login-function
-command: ssh [[user from:function]]@[[host from:function]]
-function:
+  command: ssh [[user from:function]]@[[host from:function]]
+  function:
     multi: true
     from: >
-    awk '$1 == "Host" {
-            if (host != "" && hostname != "" && user != "")
-                print host, hostname, user
-            host=$2; hostname=""; user=""
-            }
-            $1 == "Hostname" {hostname=$2}
-            $1 == "User" {user=$2}
-            END {
-            if (host != "" && hostname != "" && user != "")
-                print host, hostname, user
-            }' ~/.ssh/config
+      awk '$1 == "Host" {
+              if (host != "" && hostname != "" && user != "")
+                  print host, hostname, user
+              host=$2; hostname=""; user=""
+           }
+           $1 == "Hostname" {hostname=$2}
+           $1 == "User" {user=$2}
+           END {
+              if (host != "" && hostname != "" && user != "")
+                  print host, hostname, user
+           }' ~/.ssh/config
     select:
-        user: 2
-        host: 1
+      user: 2
+      host: 1
 ```
 
-#### 処理の流れ
-1. `finction` で定義したコマンドを実行
-1. 結果リストから1つ選択
-1. `select` で指定したフィールドを変数化し、`command` 内のプレースホルダーに埋め込む
+#### How it works
+1. Executes the command defined in `function`
+2. Select one item from the result list
+3. Extract the specified fields with `select`, and embed them into the placeholders inside `command`
 
 ---
 
-## 今後
-- 各選択リストで検索機能
-- スニペットをtagでの分類、検索
+## Future Plans
+- Add search functionality in each selection list
+- Organize/search snippets by tags
 
 ---
 
-## 🤝 コントリビュート
-改善・提案・機能追加のPR大歓迎！  
-「こんなスニペット作ってみた」でもOK！  
-気軽にIssue・PRお願いします 🙌
+## 🤝 Contributing
+Pull requests for improvements, suggestions, or new features are welcome!  
+Even sharing your own useful snippets is great too!  
+Feel free to open an Issue or PR 🙌
 
 ---
 
-## 📝 ライセンス
-- [MIT License](LICENSE-MIT) または https://opensource.org/licenses/MIT
-- [Apache License 2.0](LICENSE-APACHE) または https://www.apache.org/licenses/LICENSE-2.0
+## 📝 License
+- [MIT License](LICENSE-MIT) or https://opensource.org/licenses/MIT
+- [Apache License 2.0](LICENSE-APACHE) or https://www.apache.org/licenses/LICENSE-2.0
 
