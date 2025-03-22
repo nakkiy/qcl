@@ -8,7 +8,6 @@ snippets:
   - name: ssh-login-host
     command: ssh [[host from:function]]
     function:
-      multi: true
       from: >
         awk '$1 == "Host" {
                 if (host != "" && hostname != "" && user != "")
@@ -27,7 +26,6 @@ snippets:
   - name: ssh-login-user@hostname
     command: ssh [[user from:function]]@[[host from:function]]
     function:
-      multi: true
       from: >
         awk '$1 == "Host" {
                 if (host != "" && hostname != "" && user != "")
