@@ -1,0 +1,19 @@
+[package]
+name = "qcl-app"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "qcl"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+clap = { version = "4.0", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tracing-appender = "0.2"
+dirs = "5.0"
+snippet = { path = "../crates/snippet" }
+resolve = { path = "../crates/resolve" }
+interface = { path = "../crates/interface" }

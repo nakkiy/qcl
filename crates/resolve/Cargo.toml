@@ -1,0 +1,10 @@
+[package]
+name = "resolve"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+regex = "1.5"
+tracing = "0.1"
+snippet = { path = "../snippet" }

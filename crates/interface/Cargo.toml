@@ -1,0 +1,11 @@
+[package]
+name = "interface"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+dialoguer = "0.10"
+ratatui = { version = "0.20", optional = true }
+tracing = "0.1"
+resolve = { path = "../resolve" }
